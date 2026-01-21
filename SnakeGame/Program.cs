@@ -5,6 +5,9 @@
         
         static void Main(string[] args)
         {
+            int score = 0;
+            int speed = 150; 
+
             Console.SetWindowSize(80, 25);
             Console.CursorVisible = false;
 
@@ -22,9 +25,25 @@
 
                 Point nextHead = snake.GetNextPoint();
 
+                if (walls.IsHit(nextHead) || snake.IsHitTail(nextHead))
+                {
+                    Console.SetCursorPosition(0, 0);
+                    Console.WriteLine("GAME OVER! (Нажми Enter)");
+                    break;
+                }
+
                 if (snake.Eat(food))
                 {
                     food = foodCreator.CreateFood();
+                    score++;
+
+                    Console.Title = $"Snake Score: {score}";
+
+                    if (speed > 30)
+                    {
+                        speed -= 5;
+                    }
+
                     food.Print();
                 }
                 else
@@ -38,14 +57,7 @@
                     snake.HandleKey(key.Key);
                 }
 
-                if (walls.IsHit(nextHead) /*|| snake.IsHitTail(nextHead)*/)
-                {
-                    Console.SetCursorPosition(0, 0);
-                    Console.WriteLine("GAME OVER! (Нажми Enter)");
-                    break;
-                }
-
-                Thread.Sleep(100);
+                Thread.Sleep(speed);
             }
 
             Console.ReadLine();
